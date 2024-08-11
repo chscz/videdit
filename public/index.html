@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>videdit</title>
+      <link rel="stylesheet" href="css/index.css" />
+   </head>
+   <body>
+      <div class="container left">
+         <h1>동영상 업로드</h1>
+         <form id="upload_form" onsubmit="uploadFile(event)">
+            <input type="file" id="upload_file" name="upload_file" />
+            <input type="submit" value="업로드" />
+         </form>
+         <ol id="upload_list"></ol>
+      </div>
+      <div class="container center">
+         <h1>동영상 편집</h1>
+         <button onclick="addRow()">추가하기</button>
+         <div id="edit_container">
+            <div class="row">
+               <select id="video_select" class="video_select"></select>
+               <input type="number" placeholder="숫자 입력" />
+               <input type="number" placeholder="숫자 입력" />
+            </div>
+         </div>
+         <div>
+            <select id="extension_select">
+               <option value="avi">avi</option>
+               <option value="mp4">mp4</option>
+               <option value="mov">mov</option>
+            </select>
+         </div>
+         <button onclick="createVideo()">동영상 생성</button>
+      </div>
+      <div class="container right">
+         <!-- 오른쪽 영역 (필요에 따라 추가 기능을 넣을 수 있는 공간) -->
+      </div>
+      <div>
+         <form action="/test" method="POST">
+            <input type="submit" value="테스트" />
+         </form>
+      </div>
+      <script src="js/index.js"></script>
+   </body>
+</html>

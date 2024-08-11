@@ -1,0 +1,11 @@
+# go package dependencies
+/vendor
+
+# intellij IDE config
+/.idea
+
+# vscode IDE config
+/.vscode
+
+# uploaded video files dir
+/.upload
