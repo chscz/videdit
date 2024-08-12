@@ -9,3 +9,6 @@
 
 # uploaded video files dir
 /.upload
+
+# created video files dir
+/output
