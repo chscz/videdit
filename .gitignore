@@ -8,7 +8,7 @@
 /.vscode
 
 # uploaded video files dir
-/.upload
+/upload
 
 # created video files dir
 /output
