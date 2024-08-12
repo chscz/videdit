@@ -36,8 +36,8 @@ type VideoRepository interface {
 }
 
 type VideoEditor interface {
-	ValidateRequest(videos []*model.VideoTrim) error
-	TrimVideo(newVideoID string, videos []*model.VideoTrim) ([]string, error)
+	ValidateRequest(videos []*model.VideoTrim) (int, error)
+	TrimVideo(newVideoID string, videos []*model.VideoTrim) ([]string, int, error)
 	ConcatVideo(newVideoID, extension string, trimVideoIDs []string) error
 }
 
@@ -49,7 +49,8 @@ func NewVideoHandler(repo VideoRepository, editor VideoEditor, videoCfg config.V
 	}
 }
 
-func checkExistDir(path string) error {
+// 디렉토리 체크 후 없으면 생성
+func checkDir(path string) error {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		err := os.MkdirAll(path, 0777)
 		if err != nil {

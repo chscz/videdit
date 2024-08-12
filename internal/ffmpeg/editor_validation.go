@@ -3,6 +3,7 @@ package ffmpeg
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os/exec"
 	"strconv"
@@ -10,18 +11,20 @@ import (
 	"github.com/chscz/videdit/internal/model"
 )
 
+var errInvalidTrimInput = errors.New("trim 값이 올바르지 않습니다")
+
 type ProbeResult struct {
 	Streams []struct {
 		Duration string `json:"duration"`
 	} `json:"streams"`
 }
 
-func (ve *VideoEditor) ValidateRequest(videos []*model.VideoTrim) error {
+func (ve *VideoEditor) ValidateRequest(videos []*model.VideoTrim) (int, error) {
 	for i, video := range videos {
 		filePath := fmt.Sprintf("%s/%s", ve.cfg.UploadFilePath, video.VideoFileName)
 		duration, err := getVideoDuration(filePath)
 		if err != nil {
-			return err
+			return i + 1, err
 		}
 		// 시작시간을 음수로 넣거나 값을 안 넣을 경우 0으로 대체
 		if video.TrimStart <= -1 {
@@ -32,10 +35,10 @@ func (ve *VideoEditor) ValidateRequest(videos []*model.VideoTrim) error {
 			video.TrimEnd = duration
 		}
 		if video.TrimStart >= video.TrimEnd || video.TrimStart >= duration {
-			return &model.ValidateError{Message: fmt.Sprintf("%d 번째 영상 오류", i+1), Err: nil}
+			return i + 1, errInvalidTrimInput
 		}
 	}
-	return nil
+	return 0, nil
 }
 
 func getVideoDuration(filePath string) (float64, error) {
@@ -59,6 +62,5 @@ func getVideoDuration(filePath string) (float64, error) {
 	if err != nil {
 		return 0, fmt.Errorf("failed to parse duration: %w", err)
 	}
-
 	return duration, nil
 }
