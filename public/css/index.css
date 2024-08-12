@@ -39,3 +39,17 @@ body {
 .row button {
    margin-left: 10px;
 }
+
+.link-row {
+   margin-bottom: 10px;
+   display: flex;
+   align-items: center;
+}
+
+.link-row span {
+   margin-right: 10px;
+}
+
+.link-row a {
+   margin-right: 10px;
+}

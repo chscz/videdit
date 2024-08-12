@@ -16,6 +16,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println(cfg)
 
 	// init database
 	db, err := mariadb.InitMariaDB(cfg.MariaDB)
@@ -25,13 +26,11 @@ func main() {
 	repo := mariadb.Repository{DB: db}
 
 	// init handler
-	wh := handler.NewWebhandler()
-
 	editor := ffmpeg.NewVideoEditor(cfg.Video)
 	vh := handler.NewVideoHandler(repo, editor, cfg.Video)
 
-	// router
-	r := router.InitRouter(wh, vh)
+	// set router
+	r := router.InitRouter(vh)
 
 	// server start
 	log.Fatal(r.Start(":3000"))

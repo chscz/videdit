@@ -3,7 +3,7 @@ package config
 import "encoding/json"
 
 type Config struct {
-	MariaDB MariaDB
+	MariaDB MariaDB `envPrefix:"MARIADB_"`
 	Video   Video
 }
 
@@ -26,6 +26,10 @@ func LoadConfig() (Config, error) {
 			OutputFilePath: "./output",
 		},
 	}
+
+	// if err := env.Parse(&cfg); err != nil {
+	// 	return Config{}, err
+	// }
 
 	return cfg, nil
 }

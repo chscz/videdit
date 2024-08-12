@@ -1,9 +1,9 @@
 package config
 
 type MariaDB struct {
-	UserName string
-	Password string
-	Host     string
-	Port     string
-	Schema   string
+	UserName string `env:"USERNAME"`
+	Password string `env:"PASSWORD"`
+	Host     string `env:"HOST"`
+	Port     string `env:"PORT"`
+	Schema   string `env:"SCHEMA"`
 }

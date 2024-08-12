@@ -7,13 +7,14 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/chscz/videdit/internal/model"
 	"github.com/labstack/echo/v4"
 	"github.com/teris-io/shortid"
 )
 
-func (ve *VideoHandler) UploadVideo(c echo.Context) error {
+func (vh *VideoHandler) UploadVideo(c echo.Context) error {
 	uploadFile, err := c.FormFile("upload_file")
 	if err != nil {
 		return c.String(http.StatusBadRequest, "파일이 올바르지 않습니다.")
@@ -28,8 +29,11 @@ func (ve *VideoHandler) UploadVideo(c echo.Context) error {
 	}
 	defer uf.Close()
 
-	os.Mkdir(ve.videoCfg.UploadFilePath, 0777)
-	filePath := fmt.Sprintf("%s/%s", ve.videoCfg.UploadFilePath, uploadFile.Filename)
+	if err := checkExistDir(vh.videoCfg.UploadFilePath); err != nil {
+		return c.String(http.StatusBadRequest, "파일이 올바르지 않습니다.")
+	}
+
+	filePath := fmt.Sprintf("%s/%s", vh.videoCfg.UploadFilePath, uploadFile.Filename)
 	file, err := os.Create(filePath)
 	if err != nil {
 		fmt.Println(err)
@@ -42,10 +46,12 @@ func (ve *VideoHandler) UploadVideo(c echo.Context) error {
 
 	videoID := shortid.MustGenerate()
 	saveUploadFile := &model.VideoUpload{
-		ID:       videoID,
-		FileName: uploadFile.Filename,
+		ID:        videoID,
+		CreatedAt: time.Now(),
+		FileName:  uploadFile.Filename,
+		FilePath:  vh.videoCfg.UploadFilePath,
 	}
-	if err := ve.repo.CreateVideoUpload(c.Request().Context(), saveUploadFile); err != nil {
+	if err := vh.repo.CreateVideoUpload(c.Request().Context(), saveUploadFile); err != nil {
 		fmt.Println(err)
 	}
 

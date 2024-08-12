@@ -20,6 +20,8 @@
          <button onclick="addRow()">추가하기</button>
          <div id="edit_container">
             <div class="row">
+               <span class="row-number">1</span>
+               <span class="row-symbol">></span>
                <select id="video_select" class="video_select"></select>
                <input type="number" placeholder="숫자 입력" />
                <input type="number" placeholder="숫자 입력" />
@@ -33,15 +35,20 @@
             </select>
          </div>
          <button onclick="createVideo()">동영상 생성</button>
+         <div id="download_links"></div>
       </div>
       <div class="container right">
-         <!-- 오른쪽 영역 (필요에 따라 추가 기능을 넣을 수 있는 공간) -->
+         <h1>동영상 조회</h1>
+         <button onclick="getVideoList()">조회하기</button>
+         <div id="video_list"></div>
       </div>
       <div>
          <form action="/test" method="POST">
             <input type="submit" value="테스트" />
          </form>
       </div>
-      <script src="js/index.js"></script>
+      <script src="js/upload_video.js"></script>
+      <script src="js/create_video.js"></script>
+      <script src="js/get_video_list.js"></script>
    </body>
 </html>
