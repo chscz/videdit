@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/chscz/videdit/internal/model"
+	"github.com/chscz/videdit/internal/util"
 	"github.com/labstack/echo/v4"
 )
 
@@ -17,7 +17,7 @@ func (vh *VideoHandler) DownloadVideo(c echo.Context) error {
 	filePath := fmt.Sprintf("%s/%s", vh.videoCfg.OutputFilePath, filename)
 
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return c.JSON(http.StatusNotFound, model.NewErrorToMap(errFileNotFound))
+		return c.JSON(http.StatusNotFound, util.NewErrorToMap(errFileNotFound))
 	}
 	return c.Attachment(filePath, filename)
 }

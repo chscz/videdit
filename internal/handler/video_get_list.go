@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/chscz/videdit/internal/model"
+	"github.com/chscz/videdit/internal/util"
 	"github.com/labstack/echo/v4"
 )
 
@@ -17,12 +17,12 @@ func (vh *VideoHandler) GetVideoList(c echo.Context) error {
 	// 동영상 업로드 내역 조회
 	uploadVideos, err := vh.repo.GetUploadVideoList(c.Request().Context())
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, model.NewErrorToMap(errUploadListNotFound))
+		c.JSON(http.StatusInternalServerError, util.NewErrorToMap(errUploadListNotFound))
 	}
 	// 동영상 생성 내역 조회
 	createVideos, err := vh.repo.GetCreateVideoList(c.Request().Context())
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, model.NewErrorToMap(errCreateListNotFound))
+		c.JSON(http.StatusInternalServerError, util.NewErrorToMap(errCreateListNotFound))
 	}
 
 	resp := map[string]interface{}{

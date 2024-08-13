@@ -17,7 +17,6 @@ func (ve *VideoEditor) ConcatVideo(newVideoID, extension string, trimVideoIDs []
 	if err := ffmpeg_go.Input(concatFile, ffmpeg_go.KwArgs{"f": "concat", "safe": "0"}).
 		Output(output, ffmpeg_go.KwArgs{"c": "copy", "vsync": "vfr"}).
 		Run(); err != nil {
-		fmt.Println(err)
 		return err
 	}
 

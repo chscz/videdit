@@ -2,25 +2,10 @@ package handler
 
 import (
 	"context"
-	"os"
 
 	"github.com/chscz/videdit/internal/config"
 	"github.com/chscz/videdit/internal/model"
 )
-
-type fileFormat string
-
-const (
-	avi fileFormat = "avi"
-	mov fileFormat = "mov"
-	mp4 fileFormat = "mp4"
-)
-
-var validExtension = map[string]fileFormat{
-	"avi": avi,
-	"mov": mov,
-	"mp4": mp4,
-}
 
 type VideoHandler struct {
 	repo     VideoRepository
@@ -49,13 +34,11 @@ func NewVideoHandler(repo VideoRepository, editor VideoEditor, videoCfg config.V
 	}
 }
 
-// 디렉토리 체크 후 없으면 생성
-func checkDir(path string) error {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err := os.MkdirAll(path, 0777)
+func (vh *VideoHandler) StartUploadJob() {
+	for job := range JobQueue {
+		err := vh.UploadVideoJob(job)
 		if err != nil {
-			return err
+			//
 		}
 	}
-	return nil
 }

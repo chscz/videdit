@@ -22,11 +22,3 @@ func NewVideoEditorError(index int, err error) *VideoEditorError {
 		Err:     err.Error(),
 	}
 }
-
-func NewErrorToMap(err error) map[string]string {
-	return map[string]string{"error": err.Error()}
-}
-
-func NewDetailErrorToMap(errMsg, errDetail error) map[string]string {
-	return map[string]string{"message": errMsg.Error(), "error": errDetail.Error()}
-}

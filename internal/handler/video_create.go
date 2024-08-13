@@ -10,12 +10,13 @@ import (
 	"time"
 
 	"github.com/chscz/videdit/internal/model"
+	"github.com/chscz/videdit/internal/util"
 	"github.com/labstack/echo/v4"
 	"github.com/teris-io/shortid"
 )
 
 var (
-	errBadRequestCreate      = errors.New("동영상 생성 요청이 올바르지 않습니다")
+	errInvalidCreateRequest  = errors.New("동영상 생성 요청이 올바르지 않습니다")
 	errBadVideoRequest       = errors.New("요청 동영상이 올바르지 않습니다")
 	errCreateOutputDirFailed = errors.New("/output 디렉토리 생성 실패하였습니다")
 	errDatabaseSaveFailed    = errors.New("요청내역 저장을 실패하였습니다")
@@ -30,11 +31,11 @@ func (vh *VideoHandler) CreateVideo(c echo.Context) error {
 	// request 바인딩
 	var videoReq VideoRequest
 	if err := c.Bind(&videoReq); err != nil {
-		return c.JSON(http.StatusBadRequest, model.NewErrorToMap(err))
+		return c.JSON(http.StatusBadRequest, util.NewErrorToMap(err))
 	}
 	videos := videoReq.Videos
 	if len(videos) == 0 {
-		return c.JSON(http.StatusBadRequest, model.NewErrorToMap(errBadRequestCreate))
+		return c.JSON(http.StatusBadRequest, util.NewErrorToMap(errInvalidCreateRequest))
 	}
 
 	// 편집 순서 정렬
@@ -49,8 +50,8 @@ func (vh *VideoHandler) CreateVideo(c echo.Context) error {
 	}
 
 	// output 디렉토리 체크 및 생성
-	if err := checkDir(vh.videoCfg.OutputFilePath); err != nil {
-		return c.JSON(http.StatusInternalServerError, model.NewDetailErrorToMap(errCreateOutputDirFailed, err))
+	if err := util.CheckDir(vh.videoCfg.OutputFilePath); err != nil {
+		return c.JSON(http.StatusInternalServerError, util.NewDetailErrorToMap(errCreateOutputDirFailed, err))
 	}
 
 	// videoID 생성, output 디렉토리 내 임시 디렉토리 생성
@@ -64,19 +65,19 @@ func (vh *VideoHandler) CreateVideo(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, model.NewVideoEditorError(idx, err))
 	}
 	if len(videos) != len(trimVideoIDs) {
-		return c.JSON(http.StatusBadRequest, model.NewErrorToMap(errBadVideoRequest))
+		return c.JSON(http.StatusBadRequest, util.NewErrorToMap(errBadVideoRequest))
 	}
 	if len(trimVideoIDs) > 1 {
 		// 동영상 편집(붙이기)
 		if err := vh.editor.ConcatVideo(newVideoID, videoReq.Ext, trimVideoIDs); err != nil {
-			return c.JSON(http.StatusBadRequest, model.NewErrorToMap(errBadVideoRequest))
+			return c.JSON(http.StatusBadRequest, util.NewDetailErrorToMap(errBadVideoRequest, err))
 		}
 	}
 
 	// json 직렬화
 	b, err := json.Marshal(videoReq)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, model.NewErrorToMap(err))
+		return c.JSON(http.StatusInternalServerError, util.NewErrorToMap(err))
 	}
 
 	// 동영상 편집 요청 내역 저장
@@ -87,7 +88,7 @@ func (vh *VideoHandler) CreateVideo(c echo.Context) error {
 		FilePath:  vh.videoCfg.OutputFilePath,
 	}
 	if err := vh.repo.CreateVideoRequest(c.Request().Context(), saveVideoCreate); err != nil {
-		return c.JSON(http.StatusInternalServerError, model.NewDetailErrorToMap(errDatabaseSaveFailed, err))
+		return c.JSON(http.StatusInternalServerError, util.NewDetailErrorToMap(errDatabaseSaveFailed, err))
 	}
 
 	// client로 응답
