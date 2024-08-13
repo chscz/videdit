@@ -15,8 +15,6 @@ func InitRouter(vh *handler.VideoHandler) *echo.Echo {
 	e.GET("/download/:filename", vh.DownloadVideo)
 	e.GET("/get_video_list", vh.GetVideoList)
 
-	vh.StartUploadJob()
-
 	// e.POST("/test", test)
 
 	return e

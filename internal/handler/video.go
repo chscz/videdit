@@ -33,12 +33,3 @@ func NewVideoHandler(repo VideoRepository, editor VideoEditor, videoCfg config.V
 		videoCfg: videoCfg,
 	}
 }
-
-func (vh *VideoHandler) StartUploadJob() {
-	for job := range JobQueue {
-		err := vh.UploadVideoJob(job)
-		if err != nil {
-			//
-		}
-	}
-}

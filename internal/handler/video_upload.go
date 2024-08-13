@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"mime/multipart"
 	"net/http"
 	"os"
 	"time"
@@ -23,32 +22,12 @@ var (
 	errUploadListSaveFailed   = errors.New("업로드 내역 저장을 실패하였습니다")
 )
 
-type Job struct {
-	ctx  echo.Context
-	file *multipart.FileHeader
-}
-
-var JobQueue = make(chan Job, 100)
-
 func (vh *VideoHandler) UploadVideo(c echo.Context) error {
 	// 요청에서 업로드 파일 추출
 	uploadFile, err := c.FormFile("upload_file")
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, util.NewErrorToMap(errBadFileRequest))
 	}
-	JobQueue <- Job{ctx: c, file: uploadFile}
-	return nil
-}
-
-func (vh *VideoHandler) UploadVideoJob(job Job) error {
-
-	// // 요청에서 업로드 파일 추출
-	// uploadFile, err := c.FormFile("upload_file")
-	// if err != nil {
-	// 	return c.JSON(http.StatusBadRequest, util.NewErrorToMap(errBadFileRequest))
-	// }
-	c := job.ctx
-	uploadFile := job.file
 
 	// 지원가능 확장자 여부 체크
 	if valid := util.CheckFileExtension(uploadFile.Filename); !valid {
