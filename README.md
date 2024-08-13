@@ -1,6 +1,6 @@
 # 개요
 
-웹 페이지를 통해 `동영상 자르기`, `동영상 붙이기` 작업을 수행하는 웹 서버
+웹 페이지를 통해 서버에 `동영상 업로드`를 하고 업로드된 동영상을 활용해 `동영상 자르기`, `동영상 붙이기` 작업을 수행하여 편집이 완료된 동영상 파일을 URL을 통해 다운받을 수 있고, 업로드된 동영상과 편집된 동영상의 목록을 조회하여 출력하는 웹 서버
 
 <br>
 
@@ -41,6 +41,10 @@
 
 `/download/:filename` - 생성된 동영상 다운로드  
 `/get_video_list` - 업로드 및 생성된 동영상 목록 조회
+
+### `Response Type`
+
+`JSON`
 
 <br>
 
@@ -91,7 +95,7 @@
 
 # 의존성
 
--  [go mysql driver](https://github.com/go-sql-driver/mysql) , [gorm](https://gorm.io/) , [gorm mysql driver](https://github.com/go-gorm/mysql)
+-  [go mysql driver](https://github.com/go-sql-driver/mysql) , [gorm](https://gorm.io/) , [gorm mysql driver](https://github.com/go-gorm/mysql) - 동영상 업로드/편집요청 내역 관리에 사용되는 DB 관련 패키지
 
 ```shell
 go get -u github.com/go-sql-driver/mysql
@@ -99,19 +103,19 @@ go get -u gorm.io/driver/mysql
 go get -u gorm.io/gorm
 ```
 
--  [echo web framework](https://github.com/labstack/echo)
+-  [echo web framework](https://github.com/labstack/echo) - 웹 프레임워크 패키지
 
 ```shell
 github.com/labstack/echo/v4
 ```
 
--  [go ffmpeg package](https://github.com/u2takey/ffmpeg-go)
+-  [go ffmpeg package](https://github.com/u2takey/ffmpeg-go) - 동영상 편집 패키지
 
 ```shell
 github.com/u2takey/ffmpeg-go
 ```
 
--  [short id](https://github.com/teris-io/shortid)
+-  [short id](https://github.com/teris-io/shortid) - 동영상 ID 발급 패키지
 
 ```shell
 github.com/teris-io/shortid
