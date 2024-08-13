@@ -74,7 +74,6 @@
 -  ## set schema
 
    `mariadb` 접속 후 `videdit` 프로젝트 경로의 `schema.sql` 쿼리 실행
-   <br><br><br>
 
 <br>
 
